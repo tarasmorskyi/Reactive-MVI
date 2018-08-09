@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="AppTheme.Dialog" parent="AppTheme">
+    <item name="android:windowBackground">@color/transparent</item>
+    <item name="android:statusBarColor">@color/transparent</item>
+    <item name="android:windowAnimationStyle">@style/MyAnimation.Window</item>
+  </style>
+</resources>
