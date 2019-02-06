@@ -10,7 +10,6 @@ import com.tarasmorskyi.demoappkotlin.R
 import com.tarasmorskyi.demoappkotlin.databinding.FragmentMyGalleryBinding
 import com.tarasmorskyi.demoappkotlin.ui.base.BaseFragment
 import com.tarasmorskyi.demoappkotlin.ui.main.DemoAppPagesAdapter
-import com.tarasmorskyi.demoappkotlin.ui.main.my_gallery.MyGalleryUiModel.Companion.LOADED
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -31,15 +30,15 @@ class MyGalleryFragment: BaseFragment<MyGalleryEvent, MyGalleryUiModel>(), MyGal
     }
   }
 
-  override protected fun sendEvent(event: MyGalleryEvent) {
+  override fun sendEvent(event: MyGalleryEvent) {
     presenter.event(event)
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_gallery, container, false)
-    binding.list.setAdapter(adapter)
-    return binding.getRoot()
+    binding.list.adapter = adapter
+    return binding.root
   }
 
   override fun onAttach(context: Context?) {
@@ -54,7 +53,7 @@ class MyGalleryFragment: BaseFragment<MyGalleryEvent, MyGalleryUiModel>(), MyGal
 
   override fun onResume() {
     super.onResume()
-    presenter.event(MyGalleryEvent.onLoaded())
+    presenter.event(MyGalleryEvent.Loaded)
   }
 
   override fun onDetach() {
@@ -63,8 +62,8 @@ class MyGalleryFragment: BaseFragment<MyGalleryEvent, MyGalleryUiModel>(), MyGal
   }
 
   override fun render(uiModel: MyGalleryUiModel) {
-    when (uiModel.model) {
-      LOADED -> adapter.setItems(uiModel.pages)
+    when (uiModel) {
+      is MyGalleryUiModel.Loaded -> adapter.setItems(uiModel.pages)
     }
   }
 

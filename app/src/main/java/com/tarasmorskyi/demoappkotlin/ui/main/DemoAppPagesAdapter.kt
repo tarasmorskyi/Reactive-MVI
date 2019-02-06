@@ -38,7 +38,7 @@ class DemoAppPagesAdapter @Inject constructor(
   }
 
   override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-    holder.setPage(pages!![position])
+    holder.setPage(pages[position])
   }
 
   override fun onViewDetachedFromWindow(holder: ContactViewHolder) {
@@ -47,7 +47,7 @@ class DemoAppPagesAdapter @Inject constructor(
   }
 
   override fun getItemCount(): Int {
-    return pages!!.size
+    return pages.size
   }
 
   fun setItems(@NonNull pages: List<Page>) {

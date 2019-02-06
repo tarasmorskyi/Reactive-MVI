@@ -2,9 +2,7 @@ package com.tarasmorskyi.demoappkotlin.ui.main.settings
 
 import android.annotation.SuppressLint
 import com.tarasmorskyi.demoappkotlin.domain.interactors.SettingsInteractor
-import com.tarasmorskyi.demoappkotlin.ui.base.BaseEvent
 import com.tarasmorskyi.demoappkotlin.ui.base.BasePresenter
-import com.tarasmorskyi.demoappkotlin.utils.Constants
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import timber.log.Timber
@@ -26,24 +24,16 @@ internal class SettingsPresenter
   }
 
   override fun getModel(): Observable<SettingsUiModel> {
-    return events.flatMap({ this.onEvent(it) })
+    return events.flatMap { this.onEvent(it) }
   }
 
   @SuppressLint("SwitchIntDef")
-  private fun onEvent(event: SettingsEvent): ObservableSource<SettingsUiModel> {
+  private fun onEvent(event: SettingsEvent): ObservableSource<out SettingsUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
-    when (event.event) {
-      SettingsEvent.LOADED -> return interactor.settings.map { SettingsUiModel.onLoaded(it) }.toObservable()
-      SettingsEvent.LOGOUT -> return interactor.logout().andThen(Observable.just(SettingsUiModel.onLogout()))
-      SettingsEvent.SAVE_SETTINGS -> return interactor.setSettings(event.searchSettings).andThen(Observable.empty())
-      BaseEvent.NO_EVENT -> {
-        Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
-      }
-      else -> {
-        Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
-      }
+    return when (event) {
+      is SettingsEvent.Loaded -> interactor.settings.map { SettingsUiModel.Loaded(it) }.toObservable()
+      is SettingsEvent.Logout -> interactor.logout().andThen(Observable.just(SettingsUiModel.Logout))
+      is SettingsEvent.SaveSettings -> interactor.setSettings(event.searchSettings).andThen(Observable.empty())
     }
   }
 }

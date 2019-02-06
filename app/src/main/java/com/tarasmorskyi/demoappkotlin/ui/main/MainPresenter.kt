@@ -3,7 +3,6 @@ package com.tarasmorskyi.demoappkotlin.ui.main
 import android.annotation.SuppressLint
 import com.tarasmorskyi.demoappkotlin.domain.interactors.MainInteractor
 import com.tarasmorskyi.demoappkotlin.ui.base.BasePresenter
-import com.tarasmorskyi.demoappkotlin.utils.Constants
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import timber.log.Timber
@@ -24,18 +23,12 @@ internal class MainPresenter
   }
 
   override fun getModel(): Observable<MainUiModel> {
-    return events.flatMap({ this.onEvent(it) })
+    return events.flatMap { this.onEvent(it) }
   }
 
   @SuppressLint("SwitchIntDef")
-  private fun onEvent(event: MainEvent): ObservableSource<MainUiModel> {
+  private fun onEvent(event: MainEvent): ObservableSource<out MainUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
-    when (event.event) {
-      MainEvent.LOADED -> return Observable.empty()
-      else -> {
-        Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
-      }
-    }
+    return Observable.empty()
   }
 }

@@ -12,8 +12,6 @@ import com.tarasmorskyi.demoappkotlin.model.Page
 import com.tarasmorskyi.demoappkotlin.ui.base.BaseFragment
 import com.tarasmorskyi.demoappkotlin.ui.base.CustomDialogFragmentEventBased.Callback
 import com.tarasmorskyi.demoappkotlin.ui.main.DemoAppPagesAdapter
-import com.tarasmorskyi.demoappkotlin.ui.main.gallery.GalleryUiModel.Companion.LIKE_DIALOG
-import com.tarasmorskyi.demoappkotlin.ui.main.gallery.GalleryUiModel.Companion.LOADED
 import io.reactivex.disposables.Disposable
 import timber.log.Timber
 import javax.inject.Inject
@@ -49,10 +47,10 @@ class GalleryFragment: BaseFragment<GalleryEvent, GalleryUiModel>(), GalleryView
       savedInstanceState: Bundle?): View? {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_gallery, container, false)
 
-    binding.list.setAdapter(adapter)
+    binding.list.adapter = adapter
     clicksStream = adapter.clicks
-        .map({ GalleryEvent.onListClicked(it) })
-    .toObservable().subscribe { sendEvent(it) }
+        .map { GalleryEvent.ListClicked(it) }
+        .toObservable().subscribe { sendEvent(it) }
     return binding.getRoot()
   }
 
@@ -68,7 +66,7 @@ class GalleryFragment: BaseFragment<GalleryEvent, GalleryUiModel>(), GalleryView
 
   override fun onResume() {
     super.onResume()
-    presenter.event(GalleryEvent.onLoaded())
+    presenter.event(GalleryEvent.Loaded)
   }
 
   override fun onDetach() {
@@ -79,15 +77,14 @@ class GalleryFragment: BaseFragment<GalleryEvent, GalleryUiModel>(), GalleryView
   }
 
   override fun render(uiModel: GalleryUiModel) {
-    when (uiModel.model) {
-      LOADED -> adapter.setItems(uiModel.pages)
-      LIKE_DIALOG -> likePost(uiModel.page)
+    when (uiModel) {
+      is GalleryUiModel.Loaded -> adapter.setItems(uiModel.pages)
+      is GalleryUiModel.ShowLikeDialog -> likePost(uiModel.page)
     }
   }
 
   private fun likePost(page: Page) {
-    val fragment = LikeDialog.newInstance(
-        GalleryEvent.onLoaded(), page)
+    val fragment = LikeDialog.newInstance(page)
     fragment.setCallback(this)
     fragment.show(childFragmentManager, "Dialog")
   }

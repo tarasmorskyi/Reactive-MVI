@@ -14,6 +14,7 @@ data class Page(
     val images: List<Image> = Collections.emptyList()
 ) : PaperParcelable {
   companion object {
-    @JvmField val CREATOR = PaperParcelPage.CREATOR
+    @JvmField
+    val CREATOR = PaperParcelPage.CREATOR
   }
 }

@@ -3,7 +3,6 @@ package com.tarasmorskyi.demoappkotlin.domain.repositories
 import com.serjltt.moshi.adapters.Wrapped
 import com.tarasmorskyi.demoappkotlin.model.Page
 import com.tarasmorskyi.demoappkotlin.model.SearchSettings
-import com.tarasmorskyi.demoappkotlin.model.Verse
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import retrofit2.adapter.rxjava2.Result
@@ -21,8 +20,6 @@ interface RemoteRepository {
   fun getMyPages(token: String, username: String): Maybe<List<Page>>
 
   fun likePost(token: String, page: Page): Completable
-
-  fun getVerses(accessToken: String, chapterNumber: Int): Maybe<List<Verse>>
 
   interface RemoteService {
 
@@ -45,11 +42,6 @@ interface RemoteRepository {
     fun votePost(
         @Header("Authorization") clientId: String, @Path("imageHash") imageHash: String)
         : Maybe<Result<String>>
-
-    @GET("api/v1/chapters/{num}/verses")
-    fun getVerses(
-        @Header("Authorization") accessToken: String, @Path(
-            "num") chapterNumber: Int): Maybe<Result<List<Verse>>>
   }
 
 }

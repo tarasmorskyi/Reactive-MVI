@@ -33,7 +33,7 @@ internal abstract class SessionModule {
 
     @Provides
     @JvmStatic
-    fun provideLifecycleHandler(app: App): LifecycleHandler {
+    fun provideLifecycleHandler(): LifecycleHandler {
       return LifecycleHandler()
     }
 

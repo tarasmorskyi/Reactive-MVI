@@ -1,11 +1,11 @@
 package com.tarasmorskyi.demoappkotlin.ui.login
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.tarasmorskyi.demoappkotlin.R
@@ -13,11 +13,7 @@ import com.tarasmorskyi.demoappkotlin.databinding.ActivityLoginBinding
 import com.tarasmorskyi.demoappkotlin.di.ActivityScope
 import com.tarasmorskyi.demoappkotlin.model.UserAuthenticationData
 import com.tarasmorskyi.demoappkotlin.ui.base.BaseActivity
-import com.tarasmorskyi.demoappkotlin.ui.base.BaseUiModel
-import com.tarasmorskyi.demoappkotlin.ui.login.LoginUiModel.Companion.FAILURE
-import com.tarasmorskyi.demoappkotlin.ui.login.LoginUiModel.Companion.GO_TO_SPLASH
 import com.tarasmorskyi.demoappkotlin.ui.splash.SplashActivity
-import timber.log.Timber
 import java.util.HashMap
 import javax.inject.Inject
 
@@ -27,51 +23,52 @@ import javax.inject.Inject
 class LoginActivity : BaseActivity<LoginUiModel, LoginEvent>(), LoginView {
 
   @Inject
-  lateinit internal var presenter: LoginPresenter
-  private var binding: ActivityLoginBinding? = null
+  internal lateinit var presenter: LoginPresenter
+  private lateinit var binding: ActivityLoginBinding
 
+  @SuppressLint("SetJavaScriptEnabled")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     //analytics init
     binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-    presenter!!.attach(this).compose<LoginUiModel>({ this.setDefaults(it) }).subscribe(this)
-    var webClient: WebViewClient = object : WebViewClient() {
+    presenter.attach(this).compose<LoginUiModel> { this.setDefaults(it) }.subscribe(this)
+    val webClient: WebViewClient = object : WebViewClient() {
       override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
         parseLoginDataIfLoggedIn(url)
       }
     }
-    binding!!.webView.setWebViewClient(webClient)
-    binding!!.webView.settings.userAgentString = "demoapp"
-    binding!!.webView.clearFormData()
-    binding!!.webView.settings.javaScriptEnabled = true
+    binding.webView.webViewClient = webClient
+    binding.webView.settings.userAgentString = "demoapp"
+    binding.webView.clearFormData()
+    binding.webView.settings.javaScriptEnabled = true
 
-    binding!!.webView.loadUrl("https://api.imgur.com/oauth2/authorize?client_id=9a9f8a8c12cb9ce&response_type=token&state=demoapp")
+    binding.webView.loadUrl("https://api.imgur.com/oauth2/authorize?client_id=9a9f8a8c12cb9ce&response_type=token&state=demoapp")
   }
 
   private fun parseLoginDataIfLoggedIn(url: String?) {
-    if (url!!.contains("imgur.com") && url!!.contains("access_token")) {
-      val params = url!!.substring(url!!.indexOf("#") + 1).split("&")
+    if (url!!.contains("imgur.com") && url.contains("access_token")) {
+      val params = url.substring(url.indexOf("#") + 1).split("&")
       val map = HashMap<String, String>()
       for (param in params) {
-        val name = param.split("=".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[0]
-        val value = param.split("=".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[1]
+        val name = param.split("=".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+        val value = param.split("=".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
         map[name] = value
       }
-      var userAuthenticationData = UserAuthenticationData(map.get("access_token")!!,
-          map.get("expires_in")?.toLong()!!, map.get("token_type")!!, map.get("refresh_token")!!,
-          map.get("account_username")!!, map.get("account_id")?.toLong()!!)
-      sendEvent(LoginEvent.onLogin(userAuthenticationData))
+      val userAuthenticationData = UserAuthenticationData(map["access_token"]!!,
+          map["expires_in"]?.toLong()!!, map["token_type"]!!, map["refresh_token"]!!,
+          map["account_username"]!!, map["account_id"]?.toLong()!!)
+      sendEvent(LoginEvent.Login(userAuthenticationData))
     }
   }
 
   override fun onResume() {
     super.onResume()
-    sendEvent(LoginEvent.onLoaded())
+    sendEvent(LoginEvent.Loaded)
   }
 
   override fun sendEvent(event: LoginEvent) {
-    presenter!!.event(event)
+    presenter.event(event)
   }
 
   override fun onNext(uiModel: LoginUiModel) {
@@ -80,21 +77,9 @@ class LoginActivity : BaseActivity<LoginUiModel, LoginEvent>(), LoginView {
 
   override fun render(uiModel: LoginUiModel) {
     hideProgress()
-    when (uiModel.model) {
-      FAILURE -> showWarningMessage(uiModel.message)
-      GO_TO_SPLASH -> startActivity(SplashActivity.createIntent(this))
-      BaseUiModel.INVALID -> Timber.w("render: unhandled [uiModel %s]", uiModel)
-      else -> Timber.w("render: unhandled [uiModel %s]", uiModel)
+    when (uiModel) {
+      is LoginUiModel.GoToSplash -> startActivity(SplashActivity.createIntent(this))
     }
-  }
-
-  private fun showWarningMessage(message: CharSequence) {
-    Timber.d("showWarningMessage() called  with: messageText = [%s]", message)
-    Snackbar.make(binding!!.root, message, Snackbar.LENGTH_LONG).show()
-  }
-
-  override fun onDestroy() {
-    super.onDestroy()
   }
 
   companion object {

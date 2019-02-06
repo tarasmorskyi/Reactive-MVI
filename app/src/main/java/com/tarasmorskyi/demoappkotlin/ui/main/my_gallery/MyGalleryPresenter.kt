@@ -2,10 +2,7 @@ package com.tarasmorskyi.demoappkotlin.ui.main.my_gallery
 
 import android.annotation.SuppressLint
 import com.tarasmorskyi.demoappkotlin.domain.interactors.MyGalleryInteractor
-import com.tarasmorskyi.demoappkotlin.ui.base.BaseEvent
 import com.tarasmorskyi.demoappkotlin.ui.base.BasePresenter
-import com.tarasmorskyi.demoappkotlin.ui.main.my_gallery.MyGalleryEvent.Companion.LOADED
-import com.tarasmorskyi.demoappkotlin.utils.Constants
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import timber.log.Timber
@@ -27,22 +24,14 @@ internal class MyGalleryPresenter
   }
 
   override fun getModel(): Observable<MyGalleryUiModel> {
-    return events.flatMap({ this.onEvent(it) })
+    return events.flatMap { this.onEvent(it) }
   }
 
   @SuppressLint("SwitchIntDef")
-  private fun onEvent(event: MyGalleryEvent): ObservableSource<MyGalleryUiModel> {
+  private fun onEvent(event: MyGalleryEvent): ObservableSource<out MyGalleryUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
-    when (event.event) {
-      LOADED -> return interactor.posts.map { MyGalleryUiModel.onLoaded(it) }.toObservable()
-      BaseEvent.NO_EVENT -> {
-        Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
-      }
-      else -> {
-        Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
-      }
+    return when (event) {
+      is MyGalleryEvent.Loaded -> interactor.posts.map { MyGalleryUiModel.Loaded(it) }.toObservable()
     }
   }
 }

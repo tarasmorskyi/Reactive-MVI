@@ -2,9 +2,7 @@ package com.tarasmorskyi.demoappkotlin.ui.splash
 
 import android.annotation.SuppressLint
 import com.tarasmorskyi.demoappkotlin.domain.interactors.SplashInteractor
-import com.tarasmorskyi.demoappkotlin.ui.base.BaseEvent
 import com.tarasmorskyi.demoappkotlin.ui.base.BasePresenter
-import com.tarasmorskyi.demoappkotlin.utils.Constants
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import timber.log.Timber
@@ -26,28 +24,21 @@ internal class SplashPresenter
   }
 
   override fun getModel(): Observable<SplashUiModel> {
-    return events.flatMap({ this.onEvent(it) })
+    return events.flatMap { this.onEvent(it) }
   }
 
   @SuppressLint("SwitchIntDef")
-  private fun onEvent(event: SplashEvent): ObservableSource<SplashUiModel> {
+  private fun onEvent(event: SplashEvent): ObservableSource<out SplashUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
-    when (event.event) {
-      SplashEvent.LOADED -> return isLoggedIn()
-      BaseEvent.NO_EVENT -> {
-        Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
-      }
-      else -> {
-        Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
-      }
+    return when (event) {
+      SplashEvent.Loaded -> isLoggedIn()
     }
   }
 
-  private fun isLoggedIn(): Observable<SplashUiModel> {
-    return interactor.isLoggedIn().map({ isLoggedIn ->
-          if (isLoggedIn) SplashUiModel.Companion.goToMain()
-          else SplashUiModel.Companion.goToLogin() }).toObservable().delay(2, SECONDS)
+  private fun isLoggedIn(): Observable<out SplashUiModel> {
+    return interactor.isLoggedIn().map { isLoggedIn ->
+      if (isLoggedIn) SplashUiModel.GoToMain
+      else SplashUiModel.GoToLogin
+    }.toObservable().delay(2, SECONDS)
   }
 }

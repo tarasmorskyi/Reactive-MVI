@@ -10,15 +10,13 @@ import com.tarasmorskyi.demoappkotlin.R
 import com.tarasmorskyi.demoappkotlin.databinding.FragmentSettingsBinding
 import com.tarasmorskyi.demoappkotlin.model.SearchSettings
 import com.tarasmorskyi.demoappkotlin.ui.base.BaseFragment
-import com.tarasmorskyi.demoappkotlin.ui.main.settings.SettingsUiModel.Companion.LOADED
-import com.tarasmorskyi.demoappkotlin.ui.main.settings.SettingsUiModel.Companion.LOGOUT
 import com.tarasmorskyi.demoappkotlin.ui.main.settings.ToggleButtonGroupTableLayout.RadioButtonChecked
 import com.tarasmorskyi.demoappkotlin.ui.splash.SplashActivity
 import timber.log.Timber
 import javax.inject.Inject
 
 
-class SettingsFragment: BaseFragment<SettingsEvent, SettingsUiModel>(), SettingsView, RadioButtonChecked {
+class SettingsFragment : BaseFragment<SettingsEvent, SettingsUiModel>(), SettingsView, RadioButtonChecked {
 
   @Inject
   internal
@@ -34,14 +32,14 @@ class SettingsFragment: BaseFragment<SettingsEvent, SettingsUiModel>(), Settings
     }
   }
 
-  override protected fun sendEvent(event: SettingsEvent) {
-    presenter!!.event(event)
+  override fun sendEvent(event: SettingsEvent) {
+    presenter.event(event)
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
       savedInstanceState: Bundle?): View? {
     binding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false)
-    return binding!!.getRoot()
+    return binding.root
   }
 
   override fun onAttach(context: Context?) {
@@ -56,18 +54,18 @@ class SettingsFragment: BaseFragment<SettingsEvent, SettingsUiModel>(), Settings
 
   override fun onResume() {
     super.onResume()
-    presenter!!.event(SettingsEvent.onLoaded())
+    presenter.event(SettingsEvent.Loaded)
   }
 
   override fun onDetach() {
     super.onDetach()
-    presenter!!.detach()
+    presenter.detach()
   }
 
   override fun render(uiModel: SettingsUiModel) {
-    when (uiModel.model) {
-      LOADED -> setupSettings(uiModel.searchSettings)
-      LOGOUT -> startActivity(SplashActivity.createIntent(activity!!))
+    when (uiModel) {
+      is SettingsUiModel.Loaded -> setupSettings(uiModel.searchSettings)
+      is SettingsUiModel.Logout -> activity?.let { startActivity(SplashActivity.createIntent(it)) }
     }
   }
 
@@ -96,19 +94,19 @@ class SettingsFragment: BaseFragment<SettingsEvent, SettingsUiModel>(), Settings
 
     binding.showViral.isChecked = searchSettings.showViral
     binding.mature.isChecked = searchSettings.mature
-    binding.showViral.setOnCheckedChangeListener{ compoundButton, b ->
+    binding.showViral.setOnCheckedChangeListener { _, b ->
       run {
         searchSettings.showViral = b
-        sendEvent(SettingsEvent.saveSettings(searchSettings))
+        sendEvent(SettingsEvent.SaveSettings(searchSettings))
       }
     }
-    binding.mature.setOnCheckedChangeListener{ compoundButton, b ->
+    binding.mature.setOnCheckedChangeListener { _, b ->
       run {
         searchSettings.mature = b
-        sendEvent(SettingsEvent.saveSettings(searchSettings))
+        sendEvent(SettingsEvent.SaveSettings(searchSettings))
       }
     }
-    binding.logout.setOnClickListener{view -> sendEvent(SettingsEvent.onLogout())}
+    binding.logout.setOnClickListener { sendEvent(SettingsEvent.Logout) }
   }
 
   override fun onNext(homeUiModel: SettingsUiModel) {
@@ -131,6 +129,6 @@ class SettingsFragment: BaseFragment<SettingsEvent, SettingsUiModel>(), Settings
       binding.year.id -> searchSettings.window = "year"
       binding.all.id -> searchSettings.window = "all"
     }
-    sendEvent(SettingsEvent.saveSettings(searchSettings))
+    sendEvent(SettingsEvent.SaveSettings(searchSettings))
   }
 }

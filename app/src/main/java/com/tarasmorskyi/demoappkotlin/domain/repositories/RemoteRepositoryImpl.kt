@@ -2,7 +2,6 @@ package com.tarasmorskyi.demoappkotlin.domain.repositories
 
 import com.tarasmorskyi.demoappkotlin.model.Page
 import com.tarasmorskyi.demoappkotlin.model.SearchSettings
-import com.tarasmorskyi.demoappkotlin.model.Verse
 import dagger.Reusable
 import io.reactivex.Completable
 import io.reactivex.Maybe
@@ -31,16 +30,10 @@ class RemoteRepositoryImpl @Inject internal constructor(retrofit: Retrofit) : Re
         .compose(RxUtils.transformMaybeResult())
   }
 
-  override fun getVerses(accessToken: String, chapterNumber: Int): Maybe<List<Verse>> {
-    return service.getVerses("Bearer $accessToken", chapterNumber)
-        .subscribeOn(Schedulers.io())
-        .compose(RxUtils.transformMaybeResult())
-  }
-
   override fun likePost(token: String, page: Page): Completable {
     val link = if (page.images.isNotEmpty()) page.images[0].id else page.id
     return service.votePost("Bearer $token", link)
         .subscribeOn(Schedulers.io())
-        .toSingle().toCompletable()
+        .toSingle().ignoreElement()
   }
 }

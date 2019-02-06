@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 
 abstract class CustomDialogFragmentEventBased<E : BaseEvent> : DialogFragment(), HasSupportFragmentInjector {
-  protected var event: E? = null
+
   private lateinit var binding: FragmentDialogBinding
   private var callback: Callback<E>? = null
 
@@ -41,12 +41,8 @@ abstract class CustomDialogFragmentEventBased<E : BaseEvent> : DialogFragment(),
     return childFragmentInjector
   }
 
-  private val args: E?
-    get() = arguments!!.getParcelable(EVENT_CASE)
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    event = args
     setStyle(DialogFragment.STYLE_NO_FRAME, R.style.AppTheme_Dialog)
   }
 
@@ -115,6 +111,5 @@ abstract class CustomDialogFragmentEventBased<E : BaseEvent> : DialogFragment(),
   }
 
   companion object {
-    const val EVENT_CASE = "event"
   }
 }

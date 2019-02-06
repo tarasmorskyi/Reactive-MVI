@@ -80,7 +80,7 @@ abstract class MoshiStorage @SuppressLint("CommitPrefEdits") internal constructo
   }
 
   fun clear(vararg values: String) {
-    if (values == null || values.size == 0) {
+    if (values.isEmpty()) {
       return
     }
     for (value in values) {

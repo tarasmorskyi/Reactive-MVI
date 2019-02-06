@@ -1,11 +1,11 @@
 package com.tarasmorskyi.demoappkotlin.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.os.Handler
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.widget.Toast
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation.OnTabSelectedListener
@@ -14,11 +14,9 @@ import com.tarasmorskyi.demoappkotlin.R
 import com.tarasmorskyi.demoappkotlin.databinding.ActivityMainBinding
 import com.tarasmorskyi.demoappkotlin.di.ActivityScope
 import com.tarasmorskyi.demoappkotlin.ui.base.BaseActivity
-import com.tarasmorskyi.demoappkotlin.ui.base.BaseUiModel
 import com.tarasmorskyi.demoappkotlin.ui.main.gallery.GalleryFragment
 import com.tarasmorskyi.demoappkotlin.ui.main.my_gallery.MyGalleryFragment
 import com.tarasmorskyi.demoappkotlin.ui.main.settings.SettingsFragment
-import timber.log.Timber
 import javax.inject.Inject
 
 
@@ -26,20 +24,18 @@ import javax.inject.Inject
 class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSelectedListener {
 
   @Inject
-  lateinit internal var presenter: MainPresenter
-  private var binding: ActivityMainBinding? = null
-  internal var selectedView: Int = -1
-  private val GALLERY: Int = 0
-  private val MY_GALLERY: Int = 1
-  private val SETTINGS: Int = 2
-  lateinit private var currentFragment: Fragment
+  internal lateinit var presenter: MainPresenter
+  private lateinit var binding: ActivityMainBinding
+  private var selectedView: Int = -1
+  private lateinit var currentFragment: Fragment
   private var doubleBackToExitPressedOnce: Boolean = false
 
+  @SuppressLint("PrivateResource")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     //analytics init
     binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-    presenter!!.attach(this).compose<MainUiModel>({ this.setDefaults(it) }).subscribe(this)
+    presenter.attach(this).compose<MainUiModel> { this.setDefaults(it) }.subscribe(this)
 
 
     val item1 = AHBottomNavigationItem(R.string.gallery, R.drawable.abc_ic_star_black_16dp,
@@ -48,20 +44,15 @@ class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSele
         R.color.black)
     val item3 = AHBottomNavigationItem(R.string.settings, R.drawable.abc_ic_star_black_16dp,
         R.color.black)
-    binding!!.bottomNavigation.addItem(item1)
-    binding!!.bottomNavigation.addItem(item2)
-    binding!!.bottomNavigation.addItem(item3)
-    binding!!.bottomNavigation.setOnTabSelectedListener(this)
+    binding.bottomNavigation.addItem(item1)
+    binding.bottomNavigation.addItem(item2)
+    binding.bottomNavigation.addItem(item3)
+    binding.bottomNavigation.setOnTabSelectedListener(this)
     injectView(GALLERY)
   }
 
-  override fun onResume() {
-    super.onResume()
-    sendEvent(MainEvent.onLoaded())
-  }
-
   override fun sendEvent(event: MainEvent) {
-    presenter!!.event(event)
+    presenter.event(event)
   }
 
   override fun onNext(uiModel: MainUiModel) {
@@ -69,26 +60,12 @@ class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSele
   }
 
   override fun render(uiModel: MainUiModel) {
-    hideProgress()
-    when (uiModel.model) {
-      MainUiModel.FAILURE -> showWarningMessage(uiModel.message)
-      MainUiModel.LOADING -> showProgress(getString(R.string.loading))
-      BaseUiModel.INVALID -> Timber.w("render: unhandled [uiModel %s]", uiModel)
-      else -> Timber.w("render: unhandled [uiModel %s]", uiModel)
-    }
   }
-
-  private fun showWarningMessage(message: CharSequence) {
-    Timber.d("showWarningMessage() called  with: messageText = [%s]", message)
-    Snackbar.make(binding!!.root, message, Snackbar.LENGTH_LONG).show()
-  }
-
 
   override fun onTabSelected(position: Int, wasSelected: Boolean): Boolean {
     injectView(position)
     return true
   }
-
 
   private fun injectView(position: Int) {
     if (selectedView == position) {
@@ -97,18 +74,21 @@ class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSele
     selectedView = position
     when (position) {
       GALLERY -> {
-        injectFragment(R.id.container, GalleryFragment.Companion.newInstance(), getString(R.string.gallery))
-        binding!!.bottomNavigation.currentItem = 0
+        injectFragment(R.id.container, GalleryFragment.newInstance(),
+            getString(R.string.gallery))
+        binding.bottomNavigation.currentItem = 0
       }
       MY_GALLERY -> {
-        injectFragment(R.id.container, MyGalleryFragment.Companion.newInstance(), getString(R.string.my_gallery))
+        injectFragment(R.id.container, MyGalleryFragment.newInstance(),
+            getString(R.string.my_gallery))
 
-        binding!!.bottomNavigation.currentItem = 1
+        binding.bottomNavigation.currentItem = 1
       }
       SETTINGS -> {
-        injectFragment(R.id.container, SettingsFragment.Companion.newInstance(), getString(R.string.settings))
+        injectFragment(R.id.container, SettingsFragment.newInstance(),
+            getString(R.string.settings))
 
-        binding!!.bottomNavigation.currentItem = 2
+        binding.bottomNavigation.currentItem = 2
       }
     }
   }
@@ -116,16 +96,16 @@ class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSele
   private fun getPreviousView(): Int {
     val fm = supportFragmentManager
     val count = fm.backStackEntryCount
-    return if (count > 0) Integer.valueOf(fm.getBackStackEntryAt(count).name) else -1
+    return if (count > 0) Integer.valueOf(
+        fm.getBackStackEntryAt(count).name?.let { it } ?: "-1") else -1
   }
 
   private fun injectFragment(containerId: Int, fragment: Fragment, title: String) {
     this.currentFragment = fragment
-//    binding.appBar.title.setText(title)
     val ts = supportFragmentManager.beginTransaction()
     val newView = selectedView.toString()
     if (newView != getPreviousView().toString()) {
-      ts.replace(containerId, fragment)
+      ts.replace(containerId, fragment, title)
       ts.commit()
     }
   }
@@ -148,6 +128,10 @@ class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSele
 
 
   companion object {
+
+    private const val GALLERY: Int = 0
+    private const val MY_GALLERY: Int = 1
+    private const val SETTINGS: Int = 2
 
     fun createIntent(context: Context): Intent {
       val intent = Intent(context, MainActivity::class.java)

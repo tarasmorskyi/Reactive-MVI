@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.app.Dialog
+import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.os.Handler
@@ -47,7 +48,7 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return object : Dialog(activity, theme) {
+    return object : Dialog(activity as Context, theme) {
       override fun onBackPressed() {
         dismissView()
       }
@@ -57,7 +58,7 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
   override fun onClick(view: View) {
     when (view.id) {
       R.id.like -> {
-        sendEvent(GalleryEvent.like(arguments!!.getParcelable(PAGE)))
+        sendEvent(GalleryEvent.Like(getPage()))
         dismissView()
       }
       R.id.close -> {
@@ -67,6 +68,8 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
       }
     }
   }
+
+  private fun getPage() = (arguments.getParcelable(PAGE) as Page?)?.let { it } ?: Page()
 
   fun dismissView() {
     val colorFrom = context?.let { ContextCompat.getColor(it, R.color.transparent_25) }
@@ -99,10 +102,9 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
   companion object {
     private const val PAGE: String = "page"
 
-    fun newInstance(event: GalleryEvent, page: Page): LikeDialog {
+    fun newInstance(page: Page): LikeDialog {
       val f = LikeDialog()
       val args = Bundle()
-      args.putParcelable(EVENT_CASE, event)
       args.putParcelable(PAGE, page)
       f.arguments = args
       return f

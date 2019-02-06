@@ -3,9 +3,8 @@ package com.tarasmorskyi.demoappkotlin.ui.login
 import android.annotation.SuppressLint
 import com.tarasmorskyi.demoappkotlin.domain.interactors.LoginInteractor
 import com.tarasmorskyi.demoappkotlin.model.UserAuthenticationData
-import com.tarasmorskyi.demoappkotlin.ui.base.BaseEvent
 import com.tarasmorskyi.demoappkotlin.ui.base.BasePresenter
-import com.tarasmorskyi.demoappkotlin.utils.Constants
+import com.tarasmorskyi.demoappkotlin.ui.login.LoginUiModel.GoToSplash
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import timber.log.Timber
@@ -30,26 +29,16 @@ internal class LoginPresenter
   }
 
   @SuppressLint("SwitchIntDef")
-  private fun onEvent(event: LoginEvent): ObservableSource<LoginUiModel> {
+  private fun onEvent(event: LoginEvent): ObservableSource<out LoginUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
-    return when (event.event) {
-      LoginEvent.LOADED -> Observable.empty()
+    return when (event) {
+      is LoginEvent.Loaded -> Observable.empty()
 
-      LoginEvent.LOGIN -> login(event.userAuthenticationData)
-
-      BaseEvent.NO_EVENT -> {
-        Timber.e("event %s unhandled", event)
-        Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
-      }
-
-      else -> {
-        Timber.e("event %s unhandled", event)
-        Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
-      }
+      is LoginEvent.Login -> login(event.userAuthenticationData)
     }
   }
 
-  private fun login(userAuthenticationData: UserAuthenticationData) : Observable<LoginUiModel> {
-    return interactor.login(userAuthenticationData).andThen(Observable.just(LoginUiModel.goToSplash()))
+  private fun login(userAuthenticationData: UserAuthenticationData): Observable<out LoginUiModel> {
+    return interactor.login(userAuthenticationData).andThen(Observable.just(GoToSplash))
   }
 }

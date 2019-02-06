@@ -24,8 +24,8 @@ import javax.inject.Inject
 abstract class BaseActivity<M : BaseUiModel, E : BaseEvent>
   : DaggerAppCompatActivity(), Observer<M>, BaseView<M>, HasSupportFragmentInjector {
 
-  protected var disposables = CompositeDisposable()
-  protected var progressDialog: ProgressDialog? = null
+  private var disposables = CompositeDisposable()
+  private var progressDialog: ProgressDialog? = null
   @Inject
   internal lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
   @Inject
@@ -95,10 +95,9 @@ abstract class BaseActivity<M : BaseUiModel, E : BaseEvent>
    */
   protected abstract fun sendEvent(event: E)
 
-  fun <T> setDefaults(observable: Observable<T>): ObservableSource<T> {
-    val converted = observable
-    return observable.observeOn(AndroidSchedulers.mainThread())
-  }
+  fun setDefaults(observable: Observable<M>): ObservableSource<M> = observable.observeOn(
+      AndroidSchedulers.mainThread())
+
 
   fun showProgress(message: String) {
     if (progressDialog == null) {
