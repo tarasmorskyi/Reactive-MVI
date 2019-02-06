@@ -54,7 +54,6 @@ class SplashActivity : BaseActivity<SplashUiModel, SplashEvent>(), SplashView {
       BaseUiModel.INVALID -> Timber.w("render: unhandled [uiModel %s]", uiModel)
       else -> Timber.w("render: unhandled [uiModel %s]", uiModel)
     }
-    super.render(uiModel)
   }
 
   private fun showWarningMessage(message: CharSequence) {

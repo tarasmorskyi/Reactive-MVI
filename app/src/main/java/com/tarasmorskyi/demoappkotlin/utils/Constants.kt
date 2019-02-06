@@ -4,7 +4,7 @@ import com.tarasmorskyi.demoappkotlin.utils.errors.MethodNotImplemented
 
 
 object Constants {
-  val EMPTY_STRING = ""
-  val INVALID = -1
+  const val EMPTY_STRING = ""
+  const val INVALID = -1
   val METHOD_NOT_IMPLEMENTED = MethodNotImplemented()
 }

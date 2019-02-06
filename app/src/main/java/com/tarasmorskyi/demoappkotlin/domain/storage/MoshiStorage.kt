@@ -27,16 +27,6 @@ abstract class MoshiStorage @SuppressLint("CommitPrefEdits") internal constructo
     editor.commit()
   }
 
-/*  operator fun <T> set(type: String, payload: List<T>, clazz: Class<Array<T>>) {
-    editor.putString(type, moshi.adapter(clazz).toJson(payload.toTypedArray()))
-    editor.commit()
-  }
-
-  operator fun <T> set(type: String, payload: HashSet<T>, clazz: Class<Array<T>>) {
-    editor.putString(type, moshi.adapter(clazz).toJson(payload.toTypedArray()))
-    editor.commit()
-  }*/
-
   @Throws(IOException::class)
   operator fun <T> get(type: String, clazz: Class<T>): T? {
     val json = preferences.getString(type, null) ?: return null
@@ -77,20 +67,6 @@ abstract class MoshiStorage @SuppressLint("CommitPrefEdits") internal constructo
 
     return HashSet(Arrays.asList(*objects!!))
   }
-/*
-  @Throws(IOException::class)
-  fun <T> updateSet(type: String, value: T, clazz: Class<Array<T>>, add: Boolean) {
-    val hashSet = getHashSet(type, clazz, HashSet())
-    if (add) {
-      if (!hashSet.add(value)) { // equals can not be able to force the replace
-        hashSet.remove(value)
-        hashSet.add(value)
-      }
-    } else {
-      hashSet.remove(value)
-    }
-    set(type, hashSet, clazz)
-  }*/
 
   @Throws(IOException::class)
   operator fun <T> get(type: String, clazz: Class<T>, defaultValue: T): T? {

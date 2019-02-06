@@ -66,7 +66,6 @@ class MyGalleryFragment: BaseFragment<MyGalleryEvent, MyGalleryUiModel>(), MyGal
     when (uiModel.model) {
       LOADED -> adapter.setItems(uiModel.pages)
     }
-    super.render(uiModel)
   }
 
   override fun onNext(homeUiModel: MyGalleryUiModel) {

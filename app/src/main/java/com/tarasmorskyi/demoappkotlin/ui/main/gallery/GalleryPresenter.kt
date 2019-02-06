@@ -34,17 +34,17 @@ internal class GalleryPresenter
   @SuppressLint("SwitchIntDef")
   private fun onEvent(event: GalleryEvent): ObservableSource<GalleryUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
-    when (event.event) {
-      LOADED -> return interactor.posts.map { GalleryUiModel.onLoaded(it) }.toObservable()
-      LIKE -> return interactor.like(event.page).andThen(Observable.empty())
-      LIST_CLICKED -> return Observable.just(GalleryUiModel.onShowLikeDialog(event.page))
+    return when (event.event) {
+      LOADED -> interactor.posts.map { GalleryUiModel.onLoaded(it) }.toObservable()
+      LIKE -> interactor.like(event.page).andThen(Observable.empty())
+      LIST_CLICKED -> Observable.just(GalleryUiModel.onShowLikeDialog(event.page))
       BaseEvent.NO_EVENT -> {
         Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
+        Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
       }
       else -> {
         Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
+        Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
       }
     }
   }

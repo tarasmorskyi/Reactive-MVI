@@ -32,8 +32,8 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
     val handler = Handler()
     handler.postDelayed({
       try {
-        val colorFrom = getContext()?.let { ContextCompat.getColor(it, R.color.transparent) }
-        val colorTo = getContext()?.let { ContextCompat.getColor(it, R.color.transparent_25) }
+        val colorFrom = context?.let { ContextCompat.getColor(it, R.color.transparent) }
+        val colorTo = context?.let { ContextCompat.getColor(it, R.color.transparent_25) }
         val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
         colorAnimation.duration = 150 // milliseconds
         colorAnimation.addUpdateListener { animator ->
@@ -47,7 +47,7 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return object : Dialog(getActivity(), getTheme()) {
+    return object : Dialog(activity, theme) {
       override fun onBackPressed() {
         dismissView()
       }
@@ -69,8 +69,8 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
   }
 
   fun dismissView() {
-    val colorFrom = getContext()?.let { ContextCompat.getColor(it, R.color.transparent_25) }
-    val colorTo = getContext()?.let { ContextCompat.getColor(it, R.color.transparent) }
+    val colorFrom = context?.let { ContextCompat.getColor(it, R.color.transparent_25) }
+    val colorTo = context?.let { ContextCompat.getColor(it, R.color.transparent) }
     val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), colorFrom, colorTo)
     colorAnimation.duration = 150 // milliseconds
     colorAnimation.addUpdateListener { animator ->
@@ -97,7 +97,7 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
   }
 
   companion object {
-    private val PAGE: String = "page"
+    private const val PAGE: String = "page"
 
     fun newInstance(event: GalleryEvent, page: Page): LikeDialog {
       val f = LikeDialog()

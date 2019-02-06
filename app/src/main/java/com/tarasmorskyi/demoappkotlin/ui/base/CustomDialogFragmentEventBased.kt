@@ -115,6 +115,6 @@ abstract class CustomDialogFragmentEventBased<E : BaseEvent> : DialogFragment(),
   }
 
   companion object {
-    val EVENT_CASE = "event"
+    const val EVENT_CASE = "event"
   }
 }

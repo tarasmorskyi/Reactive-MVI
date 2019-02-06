@@ -8,11 +8,7 @@ import javax.inject.Inject
 
 class MainInteractorImpl @Inject constructor(repositories: Repositories) : MainInteractor {
 
-  private val local: LocalRepository
-  private val remote: RemoteRepository
+  private val local: LocalRepository = repositories.local
+  private val remote: RemoteRepository = repositories.remote
 
-  init {
-    local = repositories.local
-    remote = repositories.remote
-  }
 }

@@ -5,6 +5,8 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 
 interface MyGalleryInteractor {
+
   val posts: Maybe<List<Page>>
+
   fun logout(): Completable
 }

@@ -15,7 +15,7 @@ import dagger.android.support.AndroidSupportInjectionModule
 
 
 @SuppressWarnings("StaticMethodOnlyUsedInOneClass", "squid:S1118", "squid:S1610")
-@Module(subcomponents = arrayOf(SessionModule.SessionComponent::class))
+@Module(subcomponents = [SessionModule.SessionComponent::class])
 internal abstract class SessionModule {
   @Module
   companion object {
@@ -49,7 +49,11 @@ internal abstract class SessionModule {
 
   @SessionScope
   @Subcomponent(
-      modules = arrayOf(DomainInteractorsModule::class, ActivitiesModule::class, AndroidSupportInjectionModule::class))
+      modules = [
+        DomainInteractorsModule::class,
+        ActivitiesModule::class,
+        AndroidSupportInjectionModule::class
+      ])
   interface SessionComponent : AndroidInjector<App> {
     @Subcomponent.Builder
     abstract class Builder {

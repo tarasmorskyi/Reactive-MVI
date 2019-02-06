@@ -14,15 +14,15 @@ import dagger.android.ContributesAndroidInjector
 internal abstract class ActivitiesModule {
 
   @ActivityScope
-  @ContributesAndroidInjector(modules = arrayOf(MainActivityModule::class))
+  @ContributesAndroidInjector(modules = [MainActivityModule::class])
   internal abstract fun mainActivity(): MainActivity
 
   @ActivityScope
-  @ContributesAndroidInjector(modules = arrayOf(SplashActivityModule::class))
+  @ContributesAndroidInjector(modules = [SplashActivityModule::class])
   internal abstract fun splashActivity(): SplashActivity
 
   @ActivityScope
-  @ContributesAndroidInjector(modules = arrayOf(LoginActivityModule::class))
+  @ContributesAndroidInjector(modules = [LoginActivityModule::class])
   internal abstract fun loginActivity(): LoginActivity
 
 }

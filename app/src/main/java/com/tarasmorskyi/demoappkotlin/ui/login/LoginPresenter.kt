@@ -26,22 +26,25 @@ internal class LoginPresenter
   }
 
   override fun getModel(): Observable<LoginUiModel> {
-    return events.flatMap({ this.onEvent(it) })
+    return events.flatMap { this.onEvent(it) }
   }
 
   @SuppressLint("SwitchIntDef")
   private fun onEvent(event: LoginEvent): ObservableSource<LoginUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
-    when (event.event) {
-      LoginEvent.LOADED -> return Observable.empty()
-      LoginEvent.LOGIN -> return login(event.userAuthenticationData)
+    return when (event.event) {
+      LoginEvent.LOADED -> Observable.empty()
+
+      LoginEvent.LOGIN -> login(event.userAuthenticationData)
+
       BaseEvent.NO_EVENT -> {
         Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
+        Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
       }
+
       else -> {
         Timber.e("event %s unhandled", event)
-        return Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
+        Observable.error(Constants.METHOD_NOT_IMPLEMENTED)
       }
     }
   }

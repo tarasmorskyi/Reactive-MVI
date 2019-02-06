@@ -10,8 +10,13 @@ import javax.inject.Singleton
 
 
 @Singleton
-@Component(modules = arrayOf(DomainToolsModule::class, RepositoryModule::class,
-    AndroidSupportInjectionModule::class, SessionModule::class))
+@Component(
+    modules = [
+      DomainToolsModule::class,
+      RepositoryModule::class,
+      AndroidSupportInjectionModule::class,
+      SessionModule::class
+    ])
 interface AppComponent : AndroidInjector<App> {
 
   fun androidInjector(): AndroidInjector<App>

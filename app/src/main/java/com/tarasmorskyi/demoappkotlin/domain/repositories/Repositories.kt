@@ -7,12 +7,11 @@ import javax.inject.Inject
 
 @Reusable
 class Repositories @Inject constructor(
-    private val remoteRepository: Lazy<RemoteRepository>,
-    private val localRepository: Lazy<LocalRepository>) {
+    remoteRepository: Lazy<RemoteRepository>,
+    localRepository: Lazy<LocalRepository>
+) {
 
-  val remote: RemoteRepository
-    get() = remoteRepository.get()
+  val remote: RemoteRepository = remoteRepository.get()
 
-  val local: LocalRepository
-    get() = localRepository.get()
+  val local: LocalRepository = localRepository.get()
 }

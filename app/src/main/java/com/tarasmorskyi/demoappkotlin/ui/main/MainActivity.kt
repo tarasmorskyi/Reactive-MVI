@@ -22,8 +22,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 
-
-
 @ActivityScope
 class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSelectedListener {
 
@@ -78,7 +76,6 @@ class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSele
       BaseUiModel.INVALID -> Timber.w("render: unhandled [uiModel %s]", uiModel)
       else -> Timber.w("render: unhandled [uiModel %s]", uiModel)
     }
-    super.render(uiModel)
   }
 
   private fun showWarningMessage(message: CharSequence) {

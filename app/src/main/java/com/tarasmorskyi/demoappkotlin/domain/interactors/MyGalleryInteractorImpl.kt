@@ -8,19 +8,17 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import javax.inject.Inject
 
-class MyGalleryInteractorImpl @Inject constructor(repositories: Repositories) : MyGalleryInteractor {
+class MyGalleryInteractorImpl @Inject constructor(
+    repositories: Repositories
+) : MyGalleryInteractor {
 
-  private val local: LocalRepository
-  private val remote: RemoteRepository
+  private val local: LocalRepository = repositories.local
+  private val remote: RemoteRepository = repositories.remote
 
-  override val posts: Maybe<List<Page>>
-    get() = local.userAuthenticationData.flatMap { remote.getMyPages(it.accessToken, it.accountUsername) }
-
-
-  init {
-    local = repositories.local
-    remote = repositories.remote
+  override val posts: Maybe<List<Page>> = local.userAuthenticationData.flatMap {
+    remote.getMyPages(it.accessToken, it.accountUsername)
   }
+
 
   override fun logout(): Completable {
     return Completable.complete()

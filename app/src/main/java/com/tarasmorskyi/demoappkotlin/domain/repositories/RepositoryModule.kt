@@ -5,7 +5,7 @@ import dagger.Binds
 import dagger.Module
 
 
-@Module(includes = arrayOf(DomainToolsModule::class))
+@Module(includes = [DomainToolsModule::class])
 abstract class RepositoryModule {
 
   @Binds

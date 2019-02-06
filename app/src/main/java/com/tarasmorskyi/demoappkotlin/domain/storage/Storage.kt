@@ -21,14 +21,16 @@ class Storage private constructor(preferences: SharedPreferences, moshi: Moshi) 
       return instance as Storage
     }
 
-    @Synchronized protected fun getDefault(context: Context, name: String): Storage {
+    @Synchronized
+    protected fun getDefault(context: Context, name: String): Storage {
       if (instance == null) {
         instance = createInstance(context, name, Moshi.Builder().build())
       }
       return instance as Storage
     }
 
-    @Synchronized internal fun getDefault(context: Context, moshi: Moshi): Storage {
+    @Synchronized
+    internal fun getDefault(context: Context, moshi: Moshi): Storage {
       if (instance == null) {
         instance = createInstance(context, context.packageName, moshi)
       }
@@ -38,7 +40,7 @@ class Storage private constructor(preferences: SharedPreferences, moshi: Moshi) 
     private fun createInstance(context: Context, sharedPreferencesName: String?,
         moshi: Moshi): Storage {
       val sharedPreferences = context.getSharedPreferences(
-          sharedPreferencesName ?: context.packageName + "_JsonStorage", Context.MODE_PRIVATE)
+          sharedPreferencesName ?: context.packageName+"_JsonStorage", Context.MODE_PRIVATE)
       return Storage(sharedPreferences, moshi)
     }
   }

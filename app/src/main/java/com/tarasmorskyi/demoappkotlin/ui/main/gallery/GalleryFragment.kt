@@ -52,7 +52,7 @@ class GalleryFragment: BaseFragment<GalleryEvent, GalleryUiModel>(), GalleryView
     binding.list.setAdapter(adapter)
     clicksStream = adapter.clicks
         .map({ GalleryEvent.onListClicked(it) })
-    .toObservable().subscribe({ sendEvent(it) })
+    .toObservable().subscribe { sendEvent(it) }
     return binding.getRoot()
   }
 
@@ -83,7 +83,6 @@ class GalleryFragment: BaseFragment<GalleryEvent, GalleryUiModel>(), GalleryView
       LOADED -> adapter.setItems(uiModel.pages)
       LIKE_DIALOG -> likePost(uiModel.page)
     }
-    super.render(uiModel)
   }
 
   private fun likePost(page: Page) {

@@ -10,18 +10,18 @@ abstract class  BasePresenter<V : BaseView<*>, E : BaseEvent, M : BaseUiModel>  
   protected var view: V? = null
 
   @CallSuper
-  open protected fun attach(view: V): Observable<M> {
+  protected open fun attach(view: V): Observable<M> {
     this.view = view
     return getModel()
   }
 
   @CallSuper
-  open protected fun detach() {
+  protected open fun detach() {
     view = null
   }
 
   @CallSuper
-  public fun event(event: E): Observable<M> {
+  fun event(event: E): Observable<M> {
     events.onNext(event)
     return getModel()
   }

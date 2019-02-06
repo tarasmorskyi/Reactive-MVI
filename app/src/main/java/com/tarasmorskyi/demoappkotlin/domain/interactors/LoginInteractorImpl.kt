@@ -10,13 +10,8 @@ import javax.inject.Inject
 
 class LoginInteractorImpl @Inject constructor(repositories: Repositories) : LoginInteractor {
 
-  private val local: LocalRepository
-  private val remote: RemoteRepository
-
-  init {
-    local = repositories.local
-    remote = repositories.remote
-  }
+  private val local: LocalRepository = repositories.local
+  private val remote: RemoteRepository = repositories.remote
 
   override fun login(userAuthenticationData: UserAuthenticationData): Completable {
     return local.setUserAuthenticationData(userAuthenticationData)

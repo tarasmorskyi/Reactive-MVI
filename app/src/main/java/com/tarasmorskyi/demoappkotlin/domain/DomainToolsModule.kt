@@ -6,7 +6,6 @@ import com.squareup.moshi.Moshi
 import com.tarasmorskyi.demoappkotlin.BuildConfig
 import com.tarasmorskyi.demoappkotlin.domain.storage.StorageModule
 import com.tarasmorskyi.demoappkotlin.utils.MoshiDateAdapter
-import com.tarasmorskyi.demoappkotlin.utils.MyAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -15,7 +14,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
-@Module(includes = arrayOf(StorageModule::class))
+@Module(includes = [StorageModule::class])
 class DomainToolsModule {
 
   private val TIMEOUT = 60
@@ -44,7 +43,6 @@ class DomainToolsModule {
   internal fun provideDefaultMoshiBuilder(): Moshi.Builder {
     return Moshi.Builder()
         .add(MoshiDateAdapter())
-        .add(MyAdapterFactory.create())
         .add(Wrapped.ADAPTER_FACTORY)
   }
 

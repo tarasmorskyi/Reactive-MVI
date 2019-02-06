@@ -11,16 +11,10 @@ import javax.inject.Inject
 
 class SettingsInteractorImpl @Inject constructor(repositories: Repositories) : SettingsInteractor {
 
-  private val local: LocalRepository
-  private val remote: RemoteRepository
+  private val local: LocalRepository = repositories.local
+  private val remote: RemoteRepository = repositories.remote
 
-  init {
-    local = repositories.local
-    remote = repositories.remote
-  }
-
-  override val settings: Maybe<SearchSettings>
-    get() = local.searchSettings
+  override val settings: Maybe<SearchSettings> = local.searchSettings
 
   override fun setSettings(searchSettings: SearchSettings): Completable {
     return local.setSearchSettings(searchSettings)

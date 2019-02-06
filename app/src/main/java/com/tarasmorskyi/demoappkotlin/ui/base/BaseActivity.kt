@@ -2,7 +2,6 @@ package com.tarasmorskyi.demoappkotlin.ui.base
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
-import android.content.Context
 import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v4.app.Fragment
@@ -22,7 +21,8 @@ import javax.inject.Inject
 
 
 @SuppressLint("Registered")
-abstract class BaseActivity<M : BaseUiModel, E : BaseEvent> : DaggerAppCompatActivity(), Observer<M>, BaseView<M>, HasSupportFragmentInjector {
+abstract class BaseActivity<M : BaseUiModel, E : BaseEvent>
+  : DaggerAppCompatActivity(), Observer<M>, BaseView<M>, HasSupportFragmentInjector {
 
   protected var disposables = CompositeDisposable()
   protected var progressDialog: ProgressDialog? = null
@@ -30,15 +30,6 @@ abstract class BaseActivity<M : BaseUiModel, E : BaseEvent> : DaggerAppCompatAct
   internal lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
   @Inject
   internal lateinit var appInstance: App
-  internal
-  var lastUiModel: M? = null
-
-  protected val isLastUiModel: Boolean
-    get() = lastUiModel != null
-
-  override fun attachBaseContext(newBase: Context) {
-    super.attachBaseContext(newBase)
-  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     var savedInstanceStateFinal = savedInstanceState
@@ -46,29 +37,11 @@ abstract class BaseActivity<M : BaseUiModel, E : BaseEvent> : DaggerAppCompatAct
     super.onCreate(savedInstanceStateFinal)
   }
 
-  override fun onPostCreate(savedInstanceState: Bundle?) {
-    super.onPostCreate(savedInstanceState)
-  }
-
   public override fun onSaveInstanceState(outState: Bundle) {
     try {
       super.onSaveInstanceState(outState)
     } catch (ignore: IllegalStateException) {
     }
-
-  }
-
-  override fun onStart() {
-    super.onStart()
-  }
-
-  override fun onResume() {
-    super.onResume()
-  }
-
-
-  override fun onPause() {
-    super.onPause()
   }
 
   override fun onStop() {
@@ -108,15 +81,7 @@ abstract class BaseActivity<M : BaseUiModel, E : BaseEvent> : DaggerAppCompatAct
     /*ignored*/
   }
 
-  /**
-   * Call super to save ui state for restoring
-   */
-  @CallSuper
-  override fun render(uiModel: M) {
-    if (lastUiModel == null || lastUiModel != uiModel) {
-      lastUiModel = uiModel
-    }
-  }
+  abstract override fun render(uiModel: M)
 
   override fun supportFragmentInjector(): AndroidInjector<Fragment>? {
     return fragmentInjector

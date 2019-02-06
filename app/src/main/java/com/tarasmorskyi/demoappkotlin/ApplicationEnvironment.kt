@@ -7,14 +7,8 @@ import io.reactivex.disposables.Disposable
 import timber.log.Timber
 
 
-class ApplicationEnvironment : CompletableObserver {
+class ApplicationEnvironment(var app: App) : CompletableObserver {
 
-  lateinit var app: App
-
-
-  constructor(app: App) {
-    this.app = app
-  }
 
   internal fun init() {
     if (BuildConfig.DEBUG) {

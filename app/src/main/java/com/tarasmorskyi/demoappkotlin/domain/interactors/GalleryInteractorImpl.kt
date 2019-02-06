@@ -11,17 +11,13 @@ import javax.inject.Inject
 
 class GalleryInteractorImpl @Inject constructor(repositories: Repositories) : GalleryInteractor {
 
-  private val local: LocalRepository
-  private val remote: RemoteRepository
+  private val local: LocalRepository = repositories.local
+  private val remote: RemoteRepository = repositories.remote
 
-    override val posts: Maybe<List<Page>>
-      get() = local.searchSettings.flatMap{searchSettings: SearchSettings ->
-        local.userAuthenticationData.flatMap { remote.getPages(it.accessToken, searchSettings) } }
-
-  init {
-    local = repositories.local
-    remote = repositories.remote
-  }
+  override val posts: Maybe<List<Page>> = local.searchSettings
+      .flatMap { searchSettings: SearchSettings ->
+        local.userAuthenticationData.flatMap { remote.getPages(it.accessToken, searchSettings) }
+      }
 
   override fun logout(): Completable {
     return Completable.complete()

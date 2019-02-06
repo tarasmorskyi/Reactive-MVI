@@ -69,7 +69,6 @@ class SettingsFragment: BaseFragment<SettingsEvent, SettingsUiModel>(), Settings
       LOADED -> setupSettings(uiModel.searchSettings)
       LOGOUT -> startActivity(SplashActivity.createIntent(activity!!))
     }
-    super.render(uiModel)
   }
 
   private fun setupSettings(searchSettings: SearchSettings) {

@@ -18,6 +18,7 @@ import com.tarasmorskyi.demoappkotlin.ui.login.LoginUiModel.Companion.FAILURE
 import com.tarasmorskyi.demoappkotlin.ui.login.LoginUiModel.Companion.GO_TO_SPLASH
 import com.tarasmorskyi.demoappkotlin.ui.splash.SplashActivity
 import timber.log.Timber
+import java.util.HashMap
 import javax.inject.Inject
 
 
@@ -43,6 +44,7 @@ class LoginActivity : BaseActivity<LoginUiModel, LoginEvent>(), LoginView {
     binding!!.webView.setWebViewClient(webClient)
     binding!!.webView.settings.userAgentString = "demoapp"
     binding!!.webView.clearFormData()
+    binding!!.webView.settings.javaScriptEnabled = true
 
     binding!!.webView.loadUrl("https://api.imgur.com/oauth2/authorize?client_id=9a9f8a8c12cb9ce&response_type=token&state=demoapp")
   }
@@ -84,7 +86,6 @@ class LoginActivity : BaseActivity<LoginUiModel, LoginEvent>(), LoginView {
       BaseUiModel.INVALID -> Timber.w("render: unhandled [uiModel %s]", uiModel)
       else -> Timber.w("render: unhandled [uiModel %s]", uiModel)
     }
-    super.render(uiModel)
   }
 
   private fun showWarningMessage(message: CharSequence) {

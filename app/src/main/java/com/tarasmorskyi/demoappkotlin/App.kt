@@ -10,7 +10,7 @@ import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
 
 
-class App : DaggerApplication {
+class App : DaggerApplication() {
 
   lateinit var applicationEnvironment: ApplicationEnvironment
   lateinit var lifecycleHandler: LifecycleHandler
@@ -23,7 +23,7 @@ class App : DaggerApplication {
     }
   }
 
-  constructor(){
+  init {
     application = this
   }
 
@@ -41,9 +41,8 @@ class App : DaggerApplication {
     registerActivityLifecycleCallbacks(lifecycleHandler)
   }
 
-  //Fabric.with(this, new Crashlytics());
   override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-    var builder : AppComponent.Builder = DaggerAppComponent.builder()
+    val builder : AppComponent.Builder = DaggerAppComponent.builder()
     builder.seedInstance(this)
     return builder.build().androidInjector()
   }

@@ -9,16 +9,13 @@ import javax.inject.Inject
 
 
 class SplashInteractorImpl @Inject internal constructor(
-    repositories: Repositories) : SplashInteractor {
+    repositories: Repositories
+) : SplashInteractor {
+
+  private val local: LocalRepository = repositories.local
+  private val remote: RemoteRepository = repositories.remote
+
   override fun isLoggedIn(): Maybe<Boolean> {
     return local.userAuthenticationData.map { it.accessToken != EMPTY_STRING }
-  }
-
-  private val local: LocalRepository
-  private val remote: RemoteRepository
-
-  init {
-    local = repositories.local
-    remote = repositories.remote
   }
 }
