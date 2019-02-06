@@ -69,7 +69,11 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
     }
   }
 
-  private fun getPage() = (arguments.getParcelable(PAGE) as Page?)?.let { it } ?: Page()
+  private fun getPage(): Page {
+    arguments?.let { (it.getParcelable(PAGE) as Page?)?.let { page -> return page } }
+
+    return Page()
+  }
 
   fun dismissView() {
     val colorFrom = context?.let { ContextCompat.getColor(it, R.color.transparent_25) }
@@ -111,3 +115,4 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
     }
   }
 }
+
