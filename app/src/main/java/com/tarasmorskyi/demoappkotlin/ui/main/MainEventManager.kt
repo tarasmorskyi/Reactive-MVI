@@ -12,11 +12,6 @@ internal class MainEventManager
 @Inject constructor(
     private val interactor: MainInteractor) : BaseEventManager<MainEvent, MainUiModel>() {
 
-  public override fun attach(): Observable<MainUiModel> {
-    return super.attach()
-    //method must be visible to package
-  }
-
   @SuppressLint("SwitchIntDef")
   override fun onEvent(event: MainEvent): ObservableSource<out MainUiModel> {
     Timber.d("event() called  with: event = [%s]", event)

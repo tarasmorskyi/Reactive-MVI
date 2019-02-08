@@ -12,11 +12,6 @@ internal class GalleryEventManager
 @Inject constructor(
     private val interactor: GalleryInteractor) : BaseEventManager<GalleryEvent, GalleryUiModel>() {
 
-  public override fun attach(): Observable<GalleryUiModel> {
-    return super.attach()
-    //method must be visible to package
-  }
-
   @SuppressLint("SwitchIntDef")
   override fun onEvent(event: GalleryEvent): ObservableSource<out GalleryUiModel> {
     Timber.d("event() called  with: event = [%s]", event)

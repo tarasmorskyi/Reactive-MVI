@@ -13,11 +13,6 @@ internal class SplashEventManager
 @Inject constructor(
     private val interactor: SplashInteractor) : BaseEventManager<SplashEvent, SplashUiModel>() {
 
-  public override fun attach(): Observable<SplashUiModel> {
-    return super.attach()
-    //method must be visible to package
-  }
-
   @SuppressLint("SwitchIntDef")
   override fun onEvent(event: SplashEvent): ObservableSource<out SplashUiModel> {
     Timber.d("event() called  with: event = [%s]", event)

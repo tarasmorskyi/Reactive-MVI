@@ -13,11 +13,6 @@ internal class SettingsEventManager
 @Inject constructor(
     private val interactor: SettingsInteractor) : BaseEventManager<SettingsEvent, SettingsUiModel>() {
 
-  public override fun attach(): Observable<SettingsUiModel> {
-    return super.attach()
-    //method must be visible to package
-  }
-
   @SuppressLint("SwitchIntDef")
   override fun onEvent(event: SettingsEvent): ObservableSource<out SettingsUiModel> {
     Timber.d("event() called  with: event = [%s]", event)

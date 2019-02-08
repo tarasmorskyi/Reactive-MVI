@@ -14,11 +14,6 @@ internal class LoginEventManager
 @Inject constructor(
     private val interactor: LoginInteractor) : BaseEventManager<LoginEvent, LoginUiModel>() {
 
-  public override fun attach(): Observable<LoginUiModel> {
-    return super.attach()
-    //method must be visible to package
-  }
-
   @SuppressLint("SwitchIntDef")
   override fun onEvent(event: LoginEvent): ObservableSource<out LoginUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
