@@ -88,8 +88,8 @@ abstract class BaseActivity<M : BaseUiModel, E : BaseEvent>
   }
 
   /**
-   * Override to send events to presenter. For the most cases use inside:
-   * presenter.event(...).compose(this::setDefaults).subscribe(this);
+   * Override to send events to eventManager. For the most cases use inside:
+   * eventManager.event(...).compose(this::setDefaults).subscribe(this);
    * that will ensure m\odels are observed on the Main Thread
    * and subscriptions are held until ON_PAUSE events
    */

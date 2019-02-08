@@ -3,16 +3,16 @@ package com.tarasmorskyi.demoappkotlin.ui.login
 import android.annotation.SuppressLint
 import com.tarasmorskyi.demoappkotlin.domain.interactors.LoginInteractor
 import com.tarasmorskyi.demoappkotlin.model.UserAuthenticationData
-import com.tarasmorskyi.demoappkotlin.ui.base.BasePresenter
+import com.tarasmorskyi.demoappkotlin.ui.base.BaseEventManager
 import com.tarasmorskyi.demoappkotlin.ui.login.LoginUiModel.GoToSplash
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class LoginPresenter
+internal class LoginEventManager
 @Inject constructor(
-    private val interactor: LoginInteractor) : BasePresenter<LoginView, LoginEvent, LoginUiModel>() {
+    private val interactor: LoginInteractor) : BaseEventManager<LoginView, LoginEvent, LoginUiModel>() {
 
   public override fun attach(view: LoginView): Observable<LoginUiModel> {
     return super.attach(view)

@@ -16,14 +16,14 @@ import javax.inject.Inject
 class SplashActivity : BaseActivity<SplashUiModel, SplashEvent>(), SplashView {
 
   @Inject
-  internal lateinit var presenter: SplashPresenter
+  internal lateinit var eventManager: SplashEventManager
   private lateinit var binding: ActivitySplashBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     //analytics init
     binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
-    presenter.attach(this).compose<SplashUiModel> { this.setDefaults(it) }.subscribe(this)
+    eventManager.attach(this).compose<SplashUiModel> { this.setDefaults(it) }.subscribe(this)
   }
 
   override fun onResume() {
@@ -32,7 +32,7 @@ class SplashActivity : BaseActivity<SplashUiModel, SplashEvent>(), SplashView {
   }
 
   override fun sendEvent(event: SplashEvent) {
-    presenter.event(event)
+    eventManager.event(event)
   }
 
   override fun onNext(uiModel: SplashUiModel) {

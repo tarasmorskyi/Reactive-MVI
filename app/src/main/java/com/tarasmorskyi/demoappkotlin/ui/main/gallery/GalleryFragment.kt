@@ -20,7 +20,7 @@ import javax.inject.Inject
 class GalleryFragment: BaseFragment<GalleryEvent, GalleryUiModel>(), GalleryView, Callback<GalleryEvent> {
 
   @Inject
-  internal lateinit var presenter: GalleryPresenter
+  internal lateinit var eventManager: GalleryEventManager
   @Inject
   internal lateinit var adapter: DemoAppPagesAdapter
 
@@ -35,7 +35,7 @@ class GalleryFragment: BaseFragment<GalleryEvent, GalleryUiModel>(), GalleryView
   }
 
   override fun sendEvent(event: GalleryEvent) {
-    presenter.event(event)
+    eventManager.event(event)
   }
   override fun eventConfirmed(event: GalleryEvent?) {
     if (event != null) {
@@ -56,7 +56,7 @@ class GalleryFragment: BaseFragment<GalleryEvent, GalleryUiModel>(), GalleryView
 
   override fun onAttach(context: Context?) {
     super.onAttach(context)
-    setDefaults(presenter.attach(this)).subscribe(this)
+    setDefaults(eventManager.attach(this)).subscribe(this)
   }
 
   override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -66,12 +66,12 @@ class GalleryFragment: BaseFragment<GalleryEvent, GalleryUiModel>(), GalleryView
 
   override fun onResume() {
     super.onResume()
-    presenter.event(GalleryEvent.Loaded)
+    eventManager.event(GalleryEvent.Loaded)
   }
 
   override fun onDetach() {
     super.onDetach()
-    presenter.detach()
+    eventManager.detach()
     if (!clicksStream.isDisposed)
       clicksStream.dispose()
   }

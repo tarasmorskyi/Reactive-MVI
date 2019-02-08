@@ -2,16 +2,16 @@ package com.tarasmorskyi.demoappkotlin.ui.splash
 
 import android.annotation.SuppressLint
 import com.tarasmorskyi.demoappkotlin.domain.interactors.SplashInteractor
-import com.tarasmorskyi.demoappkotlin.ui.base.BasePresenter
+import com.tarasmorskyi.demoappkotlin.ui.base.BaseEventManager
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import timber.log.Timber
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
 
-internal class SplashPresenter
+internal class SplashEventManager
 @Inject constructor(
-    private val interactor: SplashInteractor) : BasePresenter<SplashView, SplashEvent, SplashUiModel>() {
+    private val interactor: SplashInteractor) : BaseEventManager<SplashView, SplashEvent, SplashUiModel>() {
 
   public override fun attach(view: SplashView): Observable<SplashUiModel> {
     return super.attach(view)

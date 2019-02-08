@@ -2,16 +2,16 @@ package com.tarasmorskyi.demoappkotlin.ui.main.settings
 
 import android.annotation.SuppressLint
 import com.tarasmorskyi.demoappkotlin.domain.interactors.SettingsInteractor
-import com.tarasmorskyi.demoappkotlin.ui.base.BasePresenter
+import com.tarasmorskyi.demoappkotlin.ui.base.BaseEventManager
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import timber.log.Timber
 import javax.inject.Inject
 
 
-internal class SettingsPresenter
+internal class SettingsEventManager
 @Inject constructor(
-    private val interactor: SettingsInteractor) : BasePresenter<SettingsView, SettingsEvent, SettingsUiModel>() {
+    private val interactor: SettingsInteractor) : BaseEventManager<SettingsView, SettingsEvent, SettingsUiModel>() {
 
   public override fun attach(view: SettingsView): Observable<SettingsUiModel> {
     return super.attach(view)

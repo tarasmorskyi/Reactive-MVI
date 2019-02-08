@@ -2,15 +2,15 @@ package com.tarasmorskyi.demoappkotlin.ui.main.gallery
 
 import android.annotation.SuppressLint
 import com.tarasmorskyi.demoappkotlin.domain.interactors.GalleryInteractor
-import com.tarasmorskyi.demoappkotlin.ui.base.BasePresenter
+import com.tarasmorskyi.demoappkotlin.ui.base.BaseEventManager
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import timber.log.Timber
 import javax.inject.Inject
 
-internal class GalleryPresenter
+internal class GalleryEventManager
 @Inject constructor(
-    private val interactor: GalleryInteractor) : BasePresenter<GalleryView, GalleryEvent, GalleryUiModel>() {
+    private val interactor: GalleryInteractor) : BaseEventManager<GalleryView, GalleryEvent, GalleryUiModel>() {
 
   public override fun attach(view: GalleryView): Observable<GalleryUiModel> {
     return super.attach(view)

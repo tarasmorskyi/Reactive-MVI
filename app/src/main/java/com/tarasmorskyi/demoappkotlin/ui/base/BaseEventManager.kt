@@ -5,7 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
 
-abstract class  BasePresenter<V : BaseView<*>, E : BaseEvent, M : BaseUiModel>   {
+abstract class  BaseEventManager<V : BaseView<*>, E : BaseEvent, M : BaseUiModel>   {
   protected val events : PublishSubject<E> = PublishSubject.create<E>()
   protected var view: V? = null
 

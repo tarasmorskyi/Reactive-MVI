@@ -70,7 +70,7 @@ class LikeDialog : CustomDialogFragmentEventBased<GalleryEvent>(), View.OnClickL
   }
 
   private fun getPage(): Page {
-    arguments?.let { (it.getParcelable(PAGE) as Page?)?.let { page -> return page } }
+    (arguments?.getParcelable(PAGE) as Page?)?.let { page -> return page }
 
     return Page()
   }

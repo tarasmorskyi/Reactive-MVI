@@ -18,7 +18,7 @@ class MyGalleryFragment: BaseFragment<MyGalleryEvent, MyGalleryUiModel>(), MyGal
 
   @Inject
   internal
-  lateinit var presenter: MyGalleryPresenter
+  lateinit var eventManager: MyGalleryEventManager
   @Inject
   internal lateinit var adapter: DemoAppPagesAdapter
 
@@ -31,7 +31,7 @@ class MyGalleryFragment: BaseFragment<MyGalleryEvent, MyGalleryUiModel>(), MyGal
   }
 
   override fun sendEvent(event: MyGalleryEvent) {
-    presenter.event(event)
+    eventManager.event(event)
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +43,7 @@ class MyGalleryFragment: BaseFragment<MyGalleryEvent, MyGalleryUiModel>(), MyGal
 
   override fun onAttach(context: Context?) {
     super.onAttach(context)
-    setDefaults(presenter.attach(this)).subscribe(this)
+    setDefaults(eventManager.attach(this)).subscribe(this)
   }
 
   override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -53,12 +53,12 @@ class MyGalleryFragment: BaseFragment<MyGalleryEvent, MyGalleryUiModel>(), MyGal
 
   override fun onResume() {
     super.onResume()
-    presenter.event(MyGalleryEvent.Loaded)
+    eventManager.event(MyGalleryEvent.Loaded)
   }
 
   override fun onDetach() {
     super.onDetach()
-    presenter.detach()
+    eventManager.detach()
   }
 
   override fun render(uiModel: MyGalleryUiModel) {

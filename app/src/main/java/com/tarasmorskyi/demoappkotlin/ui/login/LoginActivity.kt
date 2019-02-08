@@ -23,7 +23,7 @@ import javax.inject.Inject
 class LoginActivity : BaseActivity<LoginUiModel, LoginEvent>(), LoginView {
 
   @Inject
-  internal lateinit var presenter: LoginPresenter
+  internal lateinit var eventManager: LoginEventManager
   private lateinit var binding: ActivityLoginBinding
 
   @SuppressLint("SetJavaScriptEnabled")
@@ -31,7 +31,7 @@ class LoginActivity : BaseActivity<LoginUiModel, LoginEvent>(), LoginView {
     super.onCreate(savedInstanceState)
     //analytics init
     binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-    presenter.attach(this).compose<LoginUiModel> { this.setDefaults(it) }.subscribe(this)
+    eventManager.attach(this).compose<LoginUiModel> { this.setDefaults(it) }.subscribe(this)
     val webClient: WebViewClient = object : WebViewClient() {
       override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)
@@ -68,7 +68,7 @@ class LoginActivity : BaseActivity<LoginUiModel, LoginEvent>(), LoginView {
   }
 
   override fun sendEvent(event: LoginEvent) {
-    presenter.event(event)
+    eventManager.event(event)
   }
 
   override fun onNext(uiModel: LoginUiModel) {

@@ -20,7 +20,7 @@ class SettingsFragment : BaseFragment<SettingsEvent, SettingsUiModel>(), Setting
 
   @Inject
   internal
-  lateinit var presenter: SettingsPresenter
+  lateinit var eventManager: SettingsEventManager
 
   lateinit var searchSettings: SearchSettings
 
@@ -33,7 +33,7 @@ class SettingsFragment : BaseFragment<SettingsEvent, SettingsUiModel>(), Setting
   }
 
   override fun sendEvent(event: SettingsEvent) {
-    presenter.event(event)
+    eventManager.event(event)
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +44,7 @@ class SettingsFragment : BaseFragment<SettingsEvent, SettingsUiModel>(), Setting
 
   override fun onAttach(context: Context?) {
     super.onAttach(context)
-    setDefaults(presenter.attach(this)).subscribe(this)
+    setDefaults(eventManager.attach(this)).subscribe(this)
   }
 
   override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -54,12 +54,12 @@ class SettingsFragment : BaseFragment<SettingsEvent, SettingsUiModel>(), Setting
 
   override fun onResume() {
     super.onResume()
-    presenter.event(SettingsEvent.Loaded)
+    eventManager.event(SettingsEvent.Loaded)
   }
 
   override fun onDetach() {
     super.onDetach()
-    presenter.detach()
+    eventManager.detach()
   }
 
   override fun render(uiModel: SettingsUiModel) {

@@ -24,7 +24,7 @@ import javax.inject.Inject
 class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSelectedListener {
 
   @Inject
-  internal lateinit var presenter: MainPresenter
+  internal lateinit var eventManager: MainEventManager
   private lateinit var binding: ActivityMainBinding
   private var selectedView: Int = -1
   private lateinit var currentFragment: Fragment
@@ -35,7 +35,7 @@ class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSele
     super.onCreate(savedInstanceState)
     //analytics init
     binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-    presenter.attach(this).compose<MainUiModel> { this.setDefaults(it) }.subscribe(this)
+    eventManager.attach(this).compose<MainUiModel> { this.setDefaults(it) }.subscribe(this)
 
 
     val item1 = AHBottomNavigationItem(R.string.gallery, R.drawable.abc_ic_star_black_16dp,
@@ -52,7 +52,7 @@ class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSele
   }
 
   override fun sendEvent(event: MainEvent) {
-    presenter.event(event)
+    eventManager.event(event)
   }
 
   override fun onNext(uiModel: MainUiModel) {
