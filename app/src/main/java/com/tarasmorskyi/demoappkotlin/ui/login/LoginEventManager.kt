@@ -12,24 +12,15 @@ import javax.inject.Inject
 
 internal class LoginEventManager
 @Inject constructor(
-    private val interactor: LoginInteractor) : BaseEventManager<LoginView, LoginEvent, LoginUiModel>() {
+    private val interactor: LoginInteractor) : BaseEventManager<LoginEvent, LoginUiModel>() {
 
-  public override fun attach(view: LoginView): Observable<LoginUiModel> {
-    return super.attach(view)
+  public override fun attach(): Observable<LoginUiModel> {
+    return super.attach()
     //method must be visible to package
-  }
-
-  public override fun detach() {
-    super.detach()
-    //method must be visible to package
-  }
-
-  override fun getModel(): Observable<LoginUiModel> {
-    return events.flatMap { this.onEvent(it) }
   }
 
   @SuppressLint("SwitchIntDef")
-  private fun onEvent(event: LoginEvent): ObservableSource<out LoginUiModel> {
+  override fun onEvent(event: LoginEvent): ObservableSource<out LoginUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
     return when (event) {
       is LoginEvent.Loaded -> Observable.empty()

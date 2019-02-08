@@ -10,24 +10,15 @@ import javax.inject.Inject
 
 internal class MainEventManager
 @Inject constructor(
-    private val interactor: MainInteractor) : BaseEventManager<MainView, MainEvent, MainUiModel>() {
+    private val interactor: MainInteractor) : BaseEventManager<MainEvent, MainUiModel>() {
 
-  public override fun attach(view: MainView): Observable<MainUiModel> {
-    return super.attach(view)
+  public override fun attach(): Observable<MainUiModel> {
+    return super.attach()
     //method must be visible to package
-  }
-
-  public override fun detach() {
-    super.detach()
-    //method must be visible to package
-  }
-
-  override fun getModel(): Observable<MainUiModel> {
-    return events.flatMap { this.onEvent(it) }
   }
 
   @SuppressLint("SwitchIntDef")
-  private fun onEvent(event: MainEvent): ObservableSource<out MainUiModel> {
+  override fun onEvent(event: MainEvent): ObservableSource<out MainUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
     return Observable.empty()
   }

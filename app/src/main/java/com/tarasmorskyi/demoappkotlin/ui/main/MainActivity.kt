@@ -35,7 +35,7 @@ class MainActivity : BaseActivity<MainUiModel, MainEvent>(), MainView, OnTabSele
     super.onCreate(savedInstanceState)
     //analytics init
     binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-    eventManager.attach(this).compose<MainUiModel> { this.setDefaults(it) }.subscribe(this)
+    eventManager.attach().compose<MainUiModel> { this.setDefaults(it) }.subscribe(this)
 
 
     val item1 = AHBottomNavigationItem(R.string.gallery, R.drawable.abc_ic_star_black_16dp,

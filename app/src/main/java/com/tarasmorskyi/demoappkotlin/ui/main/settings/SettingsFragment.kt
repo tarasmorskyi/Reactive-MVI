@@ -44,7 +44,7 @@ class SettingsFragment : BaseFragment<SettingsEvent, SettingsUiModel>(), Setting
 
   override fun onAttach(context: Context?) {
     super.onAttach(context)
-    setDefaults(eventManager.attach(this)).subscribe(this)
+    setDefaults(eventManager.attach()).subscribe(this)
   }
 
   override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -59,7 +59,6 @@ class SettingsFragment : BaseFragment<SettingsEvent, SettingsUiModel>(), Setting
 
   override fun onDetach() {
     super.onDetach()
-    eventManager.detach()
   }
 
   override fun render(uiModel: SettingsUiModel) {

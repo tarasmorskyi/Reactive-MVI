@@ -11,24 +11,15 @@ import javax.inject.Inject
 
 internal class SplashEventManager
 @Inject constructor(
-    private val interactor: SplashInteractor) : BaseEventManager<SplashView, SplashEvent, SplashUiModel>() {
+    private val interactor: SplashInteractor) : BaseEventManager<SplashEvent, SplashUiModel>() {
 
-  public override fun attach(view: SplashView): Observable<SplashUiModel> {
-    return super.attach(view)
+  public override fun attach(): Observable<SplashUiModel> {
+    return super.attach()
     //method must be visible to package
-  }
-
-  public override fun detach() {
-    super.detach()
-    //method must be visible to package
-  }
-
-  override fun getModel(): Observable<SplashUiModel> {
-    return events.flatMap { this.onEvent(it) }
   }
 
   @SuppressLint("SwitchIntDef")
-  private fun onEvent(event: SplashEvent): ObservableSource<out SplashUiModel> {
+  override fun onEvent(event: SplashEvent): ObservableSource<out SplashUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
     return when (event) {
       SplashEvent.Loaded -> isLoggedIn()

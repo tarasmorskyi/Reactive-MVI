@@ -31,7 +31,7 @@ class LoginActivity : BaseActivity<LoginUiModel, LoginEvent>(), LoginView {
     super.onCreate(savedInstanceState)
     //analytics init
     binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
-    eventManager.attach(this).compose<LoginUiModel> { this.setDefaults(it) }.subscribe(this)
+    eventManager.attach().compose<LoginUiModel> { this.setDefaults(it) }.subscribe(this)
     val webClient: WebViewClient = object : WebViewClient() {
       override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
         super.onPageStarted(view, url, favicon)

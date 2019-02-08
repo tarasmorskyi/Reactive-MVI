@@ -23,7 +23,7 @@ class SplashActivity : BaseActivity<SplashUiModel, SplashEvent>(), SplashView {
     super.onCreate(savedInstanceState)
     //analytics init
     binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
-    eventManager.attach(this).compose<SplashUiModel> { this.setDefaults(it) }.subscribe(this)
+    eventManager.attach().compose<SplashUiModel> { this.setDefaults(it) }.subscribe(this)
   }
 
   override fun onResume() {

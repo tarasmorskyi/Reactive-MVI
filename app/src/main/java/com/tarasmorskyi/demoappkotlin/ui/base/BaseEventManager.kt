@@ -2,30 +2,28 @@ package com.tarasmorskyi.demoappkotlin.ui.base
 
 import android.support.annotation.CallSuper
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
 import io.reactivex.subjects.PublishSubject
 
 
-abstract class  BaseEventManager<V : BaseView<*>, E : BaseEvent, M : BaseUiModel>   {
+abstract class  BaseEventManager<E : BaseEvent, M : BaseUiModel>   {
   protected val events : PublishSubject<E> = PublishSubject.create<E>()
-  protected var view: V? = null
 
   @CallSuper
-  protected open fun attach(view: V): Observable<M> {
-    this.view = view
+  protected open fun attach(): Observable<M> {
     return getModel()
   }
 
   @CallSuper
-  protected open fun detach() {
-    view = null
-  }
-
-  @CallSuper
-  fun event(event: E): Observable<M> {
+  fun event(event: E){
     events.onNext(event)
-    return getModel()
   }
 
-  protected abstract fun getModel(): Observable<M>
 
-}
+  private fun getModel(): Observable<M> {
+    return events.flatMap { this.onEvent(it) }
+  }
+
+  protected abstract fun onEvent(event: E): ObservableSource<out M>
+
+  }

@@ -10,24 +10,15 @@ import javax.inject.Inject
 
 internal class GalleryEventManager
 @Inject constructor(
-    private val interactor: GalleryInteractor) : BaseEventManager<GalleryView, GalleryEvent, GalleryUiModel>() {
+    private val interactor: GalleryInteractor) : BaseEventManager<GalleryEvent, GalleryUiModel>() {
 
-  public override fun attach(view: GalleryView): Observable<GalleryUiModel> {
-    return super.attach(view)
+  public override fun attach(): Observable<GalleryUiModel> {
+    return super.attach()
     //method must be visible to package
-  }
-
-  public override fun detach() {
-    super.detach()
-    //method must be visible to package
-  }
-
-  override fun getModel(): Observable<GalleryUiModel> {
-    return events.flatMap { this.onEvent(it) }
   }
 
   @SuppressLint("SwitchIntDef")
-  private fun onEvent(event: GalleryEvent): ObservableSource<out GalleryUiModel> {
+  override fun onEvent(event: GalleryEvent): ObservableSource<out GalleryUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
     return when (event) {
 

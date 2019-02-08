@@ -11,24 +11,15 @@ import javax.inject.Inject
 
 internal class SettingsEventManager
 @Inject constructor(
-    private val interactor: SettingsInteractor) : BaseEventManager<SettingsView, SettingsEvent, SettingsUiModel>() {
+    private val interactor: SettingsInteractor) : BaseEventManager<SettingsEvent, SettingsUiModel>() {
 
-  public override fun attach(view: SettingsView): Observable<SettingsUiModel> {
-    return super.attach(view)
+  public override fun attach(): Observable<SettingsUiModel> {
+    return super.attach()
     //method must be visible to package
-  }
-
-  public override fun detach() {
-    super.detach()
-    //method must be visible to package
-  }
-
-  override fun getModel(): Observable<SettingsUiModel> {
-    return events.flatMap { this.onEvent(it) }
   }
 
   @SuppressLint("SwitchIntDef")
-  private fun onEvent(event: SettingsEvent): ObservableSource<out SettingsUiModel> {
+  override fun onEvent(event: SettingsEvent): ObservableSource<out SettingsUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
     return when (event) {
       is SettingsEvent.Loaded -> interactor.settings.map { SettingsUiModel.Loaded(it) }.toObservable()
