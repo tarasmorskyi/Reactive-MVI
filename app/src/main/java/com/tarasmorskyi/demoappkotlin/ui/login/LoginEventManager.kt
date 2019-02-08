@@ -18,13 +18,7 @@ internal class LoginEventManager
   override fun onEvent(event: LoginEvent): ObservableSource<out LoginUiModel> {
     Timber.d("event() called  with: event = [%s]", event)
     return when (event) {
-      is LoginEvent.Loaded -> Observable.empty()
-
-      is LoginEvent.Login -> login(event.userAuthenticationData)
+      is LoginEvent.Login -> interactor.login(event.userAuthenticationData).andThen(Observable.just(GoToSplash))
     }
-  }
-
-  private fun login(userAuthenticationData: UserAuthenticationData): Observable<out LoginUiModel> {
-    return interactor.login(userAuthenticationData).andThen(Observable.just(GoToSplash))
   }
 }

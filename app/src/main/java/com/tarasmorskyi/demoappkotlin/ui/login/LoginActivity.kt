@@ -64,7 +64,6 @@ class LoginActivity : BaseActivity<LoginUiModel, LoginEvent>(), LoginView {
 
   override fun onResume() {
     super.onResume()
-    sendEvent(LoginEvent.Loaded)
   }
 
   override fun sendEvent(event: LoginEvent) {
